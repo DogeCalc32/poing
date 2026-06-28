@@ -27,16 +27,7 @@ p1.x = 2
 settings = {
     index = 1,
     seizureBall = false,
-    difficulty = {"easy", "normal", "hard"},
 }
-settings.defaultDifficulty = settings.difficulty[2]
-
--- local p2 = {}
--- p2.width = 5
--- p2.height = 26
--- p2.speed = 1.25
--- p2.y = h/2 - p2.height/2
--- p2.x = w - (p2.width + 2)
 
 function getRandomColor()
     local r = math.random(255)
@@ -60,13 +51,6 @@ function on.timer()
             p1.y = p1.y - p1.speed
         end
     end
-    -- if ball.x > p2.y + p2.height/2 then
-    --     p2.y = p2.y + p2.speed
-    -- end
-    -- if ball.x < p2.y + p2.height/2 then
-    --     p2.y = p2.y - p2.speed
-    -- end
-
     -- top/bottom collision
     if ball.y - ball.radius < 0 or ball.y + ball.radius > h then
         ball.dy = -ball.dy
@@ -78,12 +62,6 @@ function on.timer()
         score = score - 1
         p1.speed = p1.speed - 0.1
     end
-    -- -- right paddle collision
-    -- if ball.x + ball.radius >= p2.x and
-    --    ball.y >= p2.y and ball.y <= p2.y + p2.height then
-    --     ball.dx = -math.abs(ball.dx)
-    --     score = score - 1
-    -- end
     -- wall collision
     if ball.x + ball.radius > w then
         ball.dx = -math.abs(ball.dx)
@@ -126,11 +104,8 @@ end
 
 function on.arrowRight()
     if not isGameState then
-        local difficultyAns = settings.defaultDifficulty[]
         if settings.index == 1 then
             settings.seizureBall = not settings.seizureBall
-        elseif settings.index == 2 then
-            settings.defaultDifficulty = settings.defaultDifficulty[]
         end
     end
 end
@@ -142,7 +117,6 @@ function on.paint(gc)
     if isGameState then
         gc:setColorRGB(255,255,255)
         gc:fillRect(p1.x, p1.y, p1.width, p1.height)
-        -- gc:fillRect(p2.x, p2.y, p2.width, p2.height)
         gc:drawString(score, w/2 - gc:getStringWidth(score)/2, 0, "top")
         local randomColor = getRandomColor()
         if settings.seizureBall then
@@ -153,6 +127,8 @@ function on.paint(gc)
         gc:fillArc(ball.x,ball.y,ball.radius,ball.radius,0,360)
     else
         gc:setColorRGB(255,255,255)
+        gc:drawString("Poing", w/2 - gc:getStringWidth("Poing")/2, 10, "top")
+        gc:drawString("Seizure Ball" .. settings.seizureBall, w/2 - gc:getStringWidth("Seizure Ball"), h/2, "middle")
         gc:drawString("Settings active", w - gc:getStringWidth("Settings active"),h, "bottom")
     end
 end
