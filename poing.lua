@@ -24,6 +24,13 @@ p1.speed = 1.1
 p1.y = h / 2 - p1.height / 2
 p1.x = 2
 
+settings = {
+    index = 1,
+    seizureBall = false,
+    difficulty = {"easy", "normal", "hard"},
+}
+settings.defaultDifficulty = settings.difficulty[2]
+
 -- local p2 = {}
 -- p2.width = 5
 -- p2.height = 26
@@ -83,7 +90,7 @@ function on.timer()
     end
 
     -- ball scoring
-    if ball.x - (ball.radius - 2) < 0 then
+    if ball.x - ball.radius < 0 then
         ball.x = w/2
         ball.y = h/2
         ball.dx = -ball.dx
@@ -100,24 +107,49 @@ function on.escapeKey()
 end
 
 function on.arrowUp()
-    ball.dy = -math.abs(ball.dy)
+    if not isGameState then
+        settings.index = settings.index - 1
+    end
+    if isGameState then
+        ball.dy = -math.abs(ball.dy)
+    end
 end
 
 function on.arrowDown()
-    ball.dy = math.abs(ball.dy)
+    if isGameState then
+        ball.dy = math.abs(ball.dy)
+    end
+    if not isGameState then
+        settings.index = settings.index + 1
+    end
+end
+
+function on.arrowRight()
+    if not isGameState then
+        local difficultyAns = settings.defaultDifficulty[]
+        if settings.index == 1 then
+            settings.seizureBall = not settings.seizureBall
+        elseif settings.index == 2 then
+            settings.defaultDifficulty = settings.defaultDifficulty[]
+        end
+    end
 end
 
 function on.paint(gc)
     gc:setColorRGB(0,0,0)
     gc:fillRect(0,0,w,h)
 
-    if isGameState == true then
+    if isGameState then
         gc:setColorRGB(255,255,255)
         gc:fillRect(p1.x, p1.y, p1.width, p1.height)
         -- gc:fillRect(p2.x, p2.y, p2.width, p2.height)
         gc:drawString(score, w/2 - gc:getStringWidth(score)/2, 0, "top")
         local randomColor = getRandomColor()
-        gc:setColorRGB(randomColor[1],randomColor[2],randomColor[3])
+        if settings.seizureBall then
+            gc:setColorRGB(randomColor[1],randomColor[2],randomColor[3])
+        else
+            gc:setColorRGB(255,255,255)
+        end
         gc:fillArc(ball.x,ball.y,ball.radius,ball.radius,0,360)
     else
         gc:setColorRGB(255,255,255)
