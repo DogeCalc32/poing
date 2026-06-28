@@ -128,7 +128,7 @@ function on.paint(gc)
     else
         gc:setColorRGB(255,255,255)
         gc:drawString("Poing", w/2 - gc:getStringWidth("Poing")/2, 10, "top")
-        gc:drawString("Seizure Ball" .. settings.seizureBall, w/2 - gc:getStringWidth("Seizure Ball"), h/2, "middle")
+        gc:drawString("Seizure Ball" .. tostring(settings.seizureBall), w/2 - gc:getStringWidth("Seizure Ball"), h/2, "middle")
         gc:drawString("Settings active", w - gc:getStringWidth("Settings active"),h, "bottom")
     end
 end
